@@ -1,22 +1,29 @@
+'''mermaid
+
 graph TD
     Start["Start"] -->|Created Account?| CreatedAccount{Created Account?}
     CreatedAccount -->|Yes| RegainAccess["Help regain access"]
     CreatedAccess -->|Login.gov| LoginGovAccess["Login.gov: Trouble signing in?"]
     CreatedAccess -->|ID.me| IDmeAccess["ID.me: I can't sign in?"]
     CreatedAccount -->|No| EmailCheck["Unique Email?"]
+    
     EmailCheck -->|Yes| AccountType["Choosing Account Type"]
     EmailCheck -->|No| SetupEmail["Set up email"]
+
     AccountType -->|SSN?| SSN{SSN?}
     SSN -->|Yes| PhoneOrAddress{Phone/Address?}
     SSN -->|No| IDmeNoSSN["ID.me (Video Call)"]
+
     PhoneOrAddress -->|Yes| StateID{State ID?}
     PhoneOrAddress -->|No| IDmeNoPhone["ID.me (Video Call)"]
+
     StateID -->|Yes| IDUpload{ID Photos?}
     StateID -->|No| Passport{Passport?}
     Passport -->|Yes| IDmePassport["ID.me"]
     Passport -->|No| OtherID{Other ID?}
     OtherID -->|Yes| IDmeOtherID["ID.me (Video Call)"]
     OtherID -->|No| NoDocs["Get Docs or Contact Info"]
+
     IDUpload -->|Yes| AccountPref{Preference?}
     IDUpload -->|No| Verification{Verification Method?}
     Verification -->|Video| IDmeVideo["ID.me (Video)"]
