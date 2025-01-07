@@ -1,64 +1,56 @@
 graph TD
-    Start -->|Have you created a Login.gov or ID.me account before?| CreatedAccount{Created Account?}
-    CreatedAccount -->|Yes| RegainAccess[Help regain access to existing account]
-    RegainAccess -->|Login.gov| LoginGovAccess["Login.gov: Trouble signing in?"]
-    RegainAccess -->|ID.me| IDmeAccess["ID.me: I can't sign in to my account"]
-    CreatedAccount -->|No| Section2[Email Address Check]
-    
-    Section2 -->|Do you have a unique email address?| UniqueEmail{Unique Email?}
-    UniqueEmail -->|Yes| Section3[Choosing Account Type]
-    UniqueEmail -->|No| SetupEmail[Set up a unique email account]
+    Start["Start"] -->|Created Account?| CreatedAccount{Created Account?}
+    CreatedAccount -->|Yes| RegainAccess["Help regain access"]
+    CreatedAccess -->|Login.gov| LoginGovAccess["Login.gov: Trouble signing in?"]
+    CreatedAccess -->|ID.me| IDmeAccess["ID.me: I can't sign in?"]
+    CreatedAccount -->|No| EmailCheck["Unique Email?"]
+    EmailCheck -->|Yes| AccountType["Choosing Account Type"]
+    EmailCheck -->|No| SetupEmail["Set up email"]
+    AccountType -->|SSN?| SSN{SSN?}
+    SSN -->|Yes| PhoneOrAddress{Phone/Address?}
+    SSN -->|No| IDmeNoSSN["ID.me (Video Call)"]
+    PhoneOrAddress -->|Yes| StateID{State ID?}
+    PhoneOrAddress -->|No| IDmeNoPhone["ID.me (Video Call)"]
+    StateID -->|Yes| IDUpload{ID Photos?}
+    StateID -->|No| Passport{Passport?}
+    Passport -->|Yes| IDmePassport["ID.me"]
+    Passport -->|No| OtherID{Other ID?}
+    OtherID -->|Yes| IDmeOtherID["ID.me (Video Call)"]
+    OtherID -->|No| NoDocs["Get Docs or Contact Info"]
+    IDUpload -->|Yes| AccountPref{Preference?}
+    IDUpload -->|No| Verification{Verification Method?}
+    Verification -->|Video| IDmeVideo["ID.me (Video)"]
+    Verification -->|In-Person| LoginGovInPerson["Login.gov (In-Person)"]
+    Verification -->|No Pref| AccountPref
 
-    Section3 -->|Do you have a U.S. Social Security number?| SSN{US SSN?}
-    SSN -->|Yes| PhoneOrAddress{US Phone/Mailing Address?}
-    SSN -->|No| IDmeNoSSN[Recommend ID.me (Video Call for Non-US)]
-    IDmeNoSSN -->|Documents Not Available| NoDocs[Assist with Veteran Health ID or contact info]
-    
-    PhoneOrAddress -->|Yes| StateID{State-issued ID?}
-    PhoneOrAddress -->|No| IDmeNoPhone["Recommend ID.me (Video Call for Non-US)"]
-    IDmeNoPhone -->|Documents Not Available| NoDocs
+    AccountPref -->|Gov| LoginGov["Login.gov"]
+    AccountPref -->|Non-Gov| IDme["ID.me"]
+    AccountPref -->|No Pref| Both["Both Options"]
 
-    StateID -->|Yes| IDUpload{Can upload ID photos?}
-    StateID -->|No| Passport{Passport or Passport Card?}
-    Passport -->|Yes| IDmePassport[Recommend ID.me]
-    Passport -->|No| OtherID{Any other forms of ID?}
-    OtherID -->|Yes| IDmeOtherID["Recommend ID.me (Video Call if 2+ IDs)"]
-    OtherID -->|No| NoDocs
+    LoginGov --> MFA_LoginGov["MFA Login.gov"]
+    IDme --> MFA_IDme["MFA ID.me"]
 
-    IDUpload -->|Yes| AccountPref{Account Preference?}
-    IDUpload -->|No| VerificationMethod{Verification Method Preference?}
-    VerificationMethod -->|Video Call| IDmeVideo[Recommend ID.me (Video Call)]
-    VerificationMethod -->|In-Person| LoginGovInPerson[Recommend Login.gov (In-Person)]
-    VerificationMethod -->|No Preference| AccountPref
-
-    AccountPref -->|Government| LoginGov[Recommend Login.gov]
-    AccountPref -->|Non-Government| IDme[Recommend ID.me]
-    AccountPref -->|No Preference| BothAccounts[Recommend both, review privacy policies]
-
-    LoginGov --> MFA_LoginGov[MFA for Login.gov]
-    IDme --> MFA_IDme[MFA for ID.me]
-
-    MFA_LoginGov -->|Gov Employee or Military?| GovEmployee{Gov Employee/Military?}
-    GovEmployee -->|Yes| PIVorCAC[Recommend PIV/CAC + Another Method]
+    MFA_LoginGov -->|Gov Employee?| GovEmployee{Gov Employee?}
+    GovEmployee -->|Yes| PIVorCAC["PIV/CAC + Another"]
     GovEmployee -->|No| SecurityKeyLoginGov{Security Key?}
-    SecurityKeyLoginGov -->|Yes| SetupSecurityKey[Setup Security Key]
+    SecurityKeyLoginGov -->|Yes| SetupSecurityKey["Setup Security Key"]
     SecurityKeyLoginGov -->|No| MobileDeviceLoginGov{Mobile Device?}
-    MobileDeviceLoginGov -->|Yes| AppOrUnlock[Recommend App or Face/Touch Unlock]
+    MobileDeviceLoginGov -->|Yes| AppOrUnlock["App or Unlock"]
     MobileDeviceLoginGov -->|No| LandlineLoginGov{Landline?}
-    LandlineLoginGov -->|Yes| PhoneCodesLoginGov[Recommend Phone Codes]
-    LandlineLoginGov -->|No| BackupCodesLoginGov[Recommend Backup Codes]
+    LandlineLoginGov -->|Yes| PhoneCodesLoginGov["Phone Codes"]
+    LandlineLoginGov -->|No| BackupCodesLoginGov["Backup Codes"]
 
     MFA_IDme -->|Security Key?| SecurityKeyIDme{Security Key?}
-    SecurityKeyIDme -->|Yes| SetupSecurityKeyIDme[Setup Security Key]
+    SecurityKeyIDme -->|Yes| SetupSecurityKeyIDme["Setup Security Key"]
     SecurityKeyIDme -->|No| MobileDeviceIDme{Mobile Device?}
-    MobileDeviceIDme -->|Yes| MFAOptionsIDme[Choose from: Code Generator, Push Notification, Passkey]
+    MobileDeviceIDme -->|Yes| MFAOptionsIDme["Code Generator, Push, Passkey"]
     MobileDeviceIDme -->|No| OtherDeviceIDme{Other Device?}
-    OtherDeviceIDme -->|Yes| PasskeyIDme[Recommend Passkey]
+    OtherDeviceIDme -->|Yes| PasskeyIDme["Passkey"]
     OtherDeviceIDme -->|No| LandlineIDme{Landline?}
-    LandlineIDme -->|Yes| PhoneCodesIDme[Recommend Phone Codes]
-    LandlineIDme -->|No| BackupCodesIDme[Recommend Backup Codes]
+    LandlineIDme -->|Yes| PhoneCodesIDme["Phone Codes"]
+    LandlineIDme -->|No| BackupCodesIDme["Backup Codes"]
 
-    SetupSecurityKey --> End
+    SetupSecurityKey --> End["End"]
     AppOrUnlock --> End
     PhoneCodesLoginGov --> End
     BackupCodesLoginGov --> End
